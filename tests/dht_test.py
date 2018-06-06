@@ -4,11 +4,11 @@ from dht.dht import DHT
 
 
 class DHTTest(unittest.TestCase):
-    """
-    Tests key lookups with a single table
-    """
     def test_dht(self):
-        dht = DHT("localhost", 9789)
+        """
+        Tests key lookups with a single table
+        """
+        dht = DHT("localhost", 9790)
 
         dht['foo'] = 'bar'
 
