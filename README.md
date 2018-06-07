@@ -2,6 +2,8 @@
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) 
 
+<img src="https://static.vecteezy.com/system/resources/previews/000/036/946/non_2x/oriole-bird-vector.jpg" width="320">
+
 A Python3 Kademlia overlay network implementation.
 
 ### Introduction.
