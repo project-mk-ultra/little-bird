@@ -1,4 +1,4 @@
-### Little Bird
+### Little Bird Kademlia P2P DHT Network
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) 
 
@@ -17,7 +17,11 @@ https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf
 Often compared with the likes of Pastry and Chord, it is used in many projects in the networking
 world including but not limited to Bittorent, Ethereum, Gnutella, IPFS. 
 
+### FAQ: Is Kademlia for you?
+
 ### Installation
+
+### Usage
 
 ### Tests
 
