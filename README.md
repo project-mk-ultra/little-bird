@@ -10,7 +10,7 @@ A Python3 Kademlia overlay network implementation.
 
 Kademlia is a pure P2P overlay network compromising also of a DHT (Distributed Hash Table).
 
-The algorithm was discussed in the following paper:
+The algorithm was proposed in the following paper:
 
 https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf
 
@@ -20,5 +20,7 @@ world including but not limited to Bittorent, Ethereum, Gnutella, IPFS.
 ### Installation
 
 ### Tests
+
+    python -m unittest
 
 ### Behind the Scenes
