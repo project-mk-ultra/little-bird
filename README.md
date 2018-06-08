@@ -72,16 +72,20 @@ Performance Increases With Load | [ ] | [x]
 Susceptible to DDOS attacks | [x] | [ ]
 Low failure rate | [ ] | [x]
 
-#### Why do you keep on insisting that Kademlia is much more performant?
+#### Why do you keep on insisting that Kademlia is much more performant? Are you trying to sell it to me?
 
 Because an increase in the number of nodes increases the performance of the network. 
-Lookups are much faster. Whereas in the case of a centralised network, a tracker might be 
+Lookups are much faster. 
+
+Whereas in the case of a centralised network, a tracker might be 
 overwhelmed, taking down the whole network with it.
 
-#### But doesnt the higher number of nodes effectively DDOS the network?
+#### But wont the higher number of nodes effectively DDOS the network?
 
-No. Kademlia favours older nodes over newer nodes. A DDOS attack would just be put the attacking
- nodes on the networks waiting list *chuckles villanously*
+No. Kademlia favours older nodes over newer nodes.
+ 
+A DDOS attack would just put the attacking nodes on the networks 
+waiting list *chuckles villanously*
 
 ### Installation
 
