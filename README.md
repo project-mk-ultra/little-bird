@@ -38,6 +38,40 @@ Due to the complications of NAT punching, we decided to forego an implementation
 
 However, this remains in our future plans.
 
+
+#### Is this also a database?
+
+Yes. A distributed one with a very low failure rate. 
+You can store and retrieve values at will.
+
+
+ #### Why does it have a low failure rate?
+ 
+ Keys are automatically replicated within different nodes in the network. Nodes that have a longer uptime
+ are also favoured in this setup. 
+ 
+ In fact the probability of failure is lower than the probability of a node leaving the
+ network. The event of a node leaving the network does not affect the database in anyway.
+
+
+#### Is there a central tracker server, like a master coordinator?
+
+No. Every node shares the same weight in the network. Each node holds substantial information
+which is useful in node and key lookups. Configuration information also spreads automatically 
+as a side effect of key lookups.
+
+
+#### Why do you keep on insisting that Kademlia is much more performant?
+
+Because an increase in the number of nodes increases the performance of the network. 
+Lookups are much faster. Whereas in the case of a centralised network, a tracker might be 
+overwhelmed, taking down the whole network with it.
+
+#### But doesnt the higher number of nodes effectively DDOS the network?
+
+No. Kademlia favours older nodes over newer nodes. A DDOS attack would just be put the attacking
+ nodes on the networks waiting list *chuckles villanously*
+
 ### Installation
 
 ### Demo
