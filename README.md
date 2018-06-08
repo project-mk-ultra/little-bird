@@ -17,11 +17,30 @@ https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf
 Often compared with the likes of Pastry and Chord, it is used in many projects in the networking
 world including but not limited to Bittorent, Ethereum, Gnutella, IPFS. 
 
-### FAQ: Is Kademlia for you?
+### FAQ: Is this Kademlia implementation for you?
+
+#### Is it anonymous?
+
+No. Nodes use naked IP addresses to locate each other and share information 
+within the network
+
+#### Is the shared information encrypted?
+
+No.Information is shared within the network without any encryption. However, adding an
+encryption mechanism is trivial. 
+
+This can be done by adding some logic to the `send_message()` logic and implementing a custom 
+message received handler.
+
+#### Does this implementation work on the public Internet?
+
+Due to the complications of NAT punching, we decided to forego an implementation  that could work on the Internet. 
+
+However, this remains in our future plans.
 
 ### Installation
 
-### Usage
+### Demo
 
 ### Tests
 
