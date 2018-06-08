@@ -15,7 +15,7 @@ The algorithm was proposed in the following paper:
 https://pdos.csail.mit.edu/~petar/papers/maymounkov-kademlia-lncs.pdf
 
 Often compared with the likes of Pastry and Chord, it is used in many projects in the networking
-world including but not limited to Bittorent, Ethereum, Gnutella, IPFS. 
+world including but not limited to BitTorrent, Ethereum, Gnutella, IPFS. 
 
 ### FAQ: Is this Kademlia implementation for you?
 
@@ -56,10 +56,21 @@ You can store and retrieve values at will.
 
 #### Is there a central tracker server, like a master coordinator?
 
-No. Every node shares the same weight in the network. Each node holds substantial information
-which is useful in node and key lookups. Configuration information also spreads automatically 
-as a side effect of key lookups.
+No. Every node shares the same weight in the network.
+ 
+Each node holds substantial information which is useful in node and key lookups. 
 
+Configuration information also spreads automatically as a side effect of key lookups.
+
+Despite the lack of a tracker, all tracker functions are covered by Kademlia. 
+
+Feature | Central Tracker Network | DHT Based Network
+--- | --- | ---
+Node Lookups  | [x] | [x] 
+Key Lookups | [x] | [x]
+Performance Increases With Load | [ ] | [x]
+Susceptible to DDOS attacks | [x] | [ ]
+Low failure rate | [ ] | [x]
 
 #### Why do you keep on insisting that Kademlia is much more performant?
 
