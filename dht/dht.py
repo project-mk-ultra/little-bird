@@ -2,13 +2,12 @@ import random
 import threading
 import time
 
-from dht import hashing
 from dht.bucket_set import BucketSet
 from dht.dht_request_handler import DHTRequestHandler
 from dht.dht_server import DHTServer
-from dht.hashing import random_id, id_bits
 from dht.peer import Peer
 from dht.shortlist import Shortlist
+from dht.utils import Utils
 
 k = 20
 alpha = 3
@@ -24,10 +23,10 @@ class DHT:
                  seeds=[],
                  storage={},
                  info={},
-                 hash_function=hashing.hash_function,
+                 hash_function=Utils.hash_function,
                  requesthandler=DHTRequestHandler):
         if not id:
-            id = random_id()
+            id = Utils.random_id()
         self.storage = storage
         self.info = info
         self.hash_function = hash_function
