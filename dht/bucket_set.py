@@ -2,15 +2,7 @@ import heapq
 import threading
 
 from dht.peer import Peer
-
-
-def largest_differing_bit(value1, value2):
-    distance = value1 ^ value2
-    length = -1
-    while distance:
-        distance >>= 1
-        length += 1
-    return max(0, length)
+from dht.utils import Utils
 
 
 class BucketSet(object):
@@ -35,7 +27,7 @@ class BucketSet(object):
 
     def insert(self, peer):
         if peer.id != self.id:
-            bucket_number = largest_differing_bit(self.id, peer.id)
+            bucket_number = Utils.largest_differing_bit(self.id, peer.id)
             peer_triple = peer.astriple()
             with self.lock:
                 bucket = self.buckets[bucket_number]
