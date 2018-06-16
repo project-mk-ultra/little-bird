@@ -6,3 +6,5 @@ venv/
 # IntelliJ
 
 .idea/
+
+.env

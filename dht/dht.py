@@ -1,3 +1,4 @@
+import os
 import random
 import threading
 import time
@@ -9,10 +10,14 @@ from dht.peer import Peer
 from dht.shortlist import Shortlist
 from dht.utils import Utils
 
-k = 20
-alpha = 3
-id_bits = 128
-iteration_sleep = 1
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
+
+K_BUCKET_SIZE = os.getenv("K_BUCKET_SIZE")
+ALPHA = os.getenv("ALPHA")
+id_bits = os.getenv("ID_BITS")
+iteration_sleep = os.getenv("ITERATION_SLEEP")
 
 
 class DHT:
@@ -32,7 +37,7 @@ class DHT:
         self.hash_function = hash_function
         self.peer = Peer(host, port, id, info)
         self.data = self.storage
-        self.buckets = BucketSet(k, id_bits, self.peer.id)
+        self.buckets = BucketSet(K_BUCKET_SIZE, id_bits, self.peer.id)
         self.rpc_ids = {}  # should probably have a lock for this
         self.server = DHTServer(self.peer.address(), requesthandler)
         self.server.dht = self
@@ -45,14 +50,14 @@ class DHT:
         return self.peer.id
 
     def iterative_find_nodes(self, key, boot_peer=None):
-        shortlist = Shortlist(k, key)
-        shortlist.update(self.buckets.nearest_nodes(key, limit=alpha))
+        shortlist = Shortlist(K_BUCKET_SIZE, key)
+        shortlist.update(self.buckets.nearest_nodes(key, limit=ALPHA))
         if boot_peer:
             rpc_id = random.getrandbits(id_bits)
             self.rpc_ids[rpc_id] = shortlist
             boot_peer.find_node(key, rpc_id, socket=self.server.socket, peer_id=self.peer.id, peer_info=self.peer.info)
         while (not shortlist.complete()) or boot_peer:
-            nearest_nodes = shortlist.get_next_iteration(alpha)
+            nearest_nodes = shortlist.get_next_iteration(ALPHA)
             for peer in nearest_nodes:
                 shortlist.mark(peer)
                 rpc_id = random.getrandbits(id_bits)
@@ -63,10 +68,10 @@ class DHT:
         return shortlist.results()
 
     def iterative_find_value(self, key):
-        shortlist = Shortlist(k, key)
-        shortlist.update(self.buckets.nearest_nodes(key, limit=alpha))
+        shortlist = Shortlist(K_BUCKET_SIZE, key)
+        shortlist.update(self.buckets.nearest_nodes(key, limit=ALPHA))
         while not shortlist.complete():
-            nearest_nodes = shortlist.get_next_iteration(alpha)
+            nearest_nodes = shortlist.get_next_iteration(ALPHA)
             for peer in nearest_nodes:
                 shortlist.mark(peer)
                 rpc_id = random.getrandbits(id_bits)

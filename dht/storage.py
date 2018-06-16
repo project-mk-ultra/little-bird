@@ -1,10 +1,6 @@
 import shelve
 
 
-def test():
-    pass
-
-
 class Shelve:
     """
     It works like Python 2s pickle
