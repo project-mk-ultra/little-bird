@@ -1,9 +1,13 @@
 import unittest
+from pathlib import Path
 
 from dht.dht import DHT
 
 
 class DHTTest(unittest.TestCase):
+    def setUp(self):
+        pass
+
     def test_dht(self):
         """
         Tests key lookups with a single table

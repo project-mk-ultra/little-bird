@@ -6,3 +6,7 @@ venv/
 # IntelliJ
 
 .idea/
+
+# Environmental Variables
+
+.env
