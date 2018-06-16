@@ -7,6 +7,10 @@
 
 A Python3 Kademlia overlay network implementation.
 
+### Installation.
+
+### Demo.
+
 ### Introduction.
 
 Kademlia is a pure P2P overlay network compromising also of a DHT (Distributed Hash Table).
@@ -87,10 +91,6 @@ No. Kademlia favours older nodes over newer nodes.
  
 A DDOS attack would just put the attacking nodes on the networks 
 waiting list *chuckles villanously*
-
-### Installation
-
-### Demo
 
 ### Tests
 
