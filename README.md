@@ -1,15 +1,48 @@
 ### Little Bird Kademlia P2P DHT Network
 
+A Python3 Kademlia overlay network implementation.
+
 [![Build Status](https://travis-ci.org/ZigmundVonZaun/little-bird.svg?branch=master)](https://travis-ci.org/ZigmundVonZaun/little-bird)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/) 
 
 <img src="docs/images/bird.jpg" width="320">
 
-A Python3 Kademlia overlay network implementation.
+### Demo.
 
 ### Installation.
 
-### Demo.
+From PyPi (Stable version)
+
+```bash
+
+$ mkdir tmp && cd tmp
+
+$ pip3 install little-bird
+
+```
+
+From GitHub (Bleeding Edge/Development version)
+
+```bash
+
+$ git clone https://github.com/ZigmundVonZaun/little-bird.git
+
+$ python3 -m virtualenv venv
+
+$ pip3 install -r requirements.txt
+
+```
+
+### Setup.
+
+Copy the ```.env.dist``` to  ```.env``` found on the directory root 
+and edit it as you see fit. 
+
+```bash
+
+$ cp .env.dist .env && nano .env
+
+```
 
 ### Introduction.
 

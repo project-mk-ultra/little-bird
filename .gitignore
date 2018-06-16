@@ -7,4 +7,6 @@ venv/
 
 .idea/
 
+# Environmental Variables
+
 .env

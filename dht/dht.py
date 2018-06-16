@@ -25,11 +25,17 @@ class DHT:
                  host,
                  port,
                  id=None,
-                 seeds=[],
-                 storage={},
-                 info={},
+                 seeds=None,
+                 storage=None,
+                 info=None,
                  hash_function=Utils.hash_function,
                  requesthandler=DHTRequestHandler):
+        if info is None:
+            info = {}
+        if storage is None:
+            storage = {}
+        if seeds is None:
+            seeds = []
         if not id:
             id = Utils.random_id()
         self.storage = storage
