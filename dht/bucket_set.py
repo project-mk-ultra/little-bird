@@ -5,8 +5,14 @@ from dht.peer import Peer
 from dht.utils import Utils
 
 
-class BucketSet(object):
+class BucketSet:
     def __init__(self, bucket_size, buckets, id):
+        """
+
+        :param bucket_size:
+        :param buckets:
+        :param id:
+        """
         self.id = id
         self.bucket_size = bucket_size
         self.buckets = [list() for _ in range(buckets)]
