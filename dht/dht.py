@@ -14,10 +14,10 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-K_BUCKET_SIZE = int(os.getenv("K_BUCKET_SIZE"))
-ALPHA = int(os.getenv("ALPHA"))
-ID_BITS = int(os.getenv("ID_BITS"))
-ITERATION_SLEEP = int(os.getenv("ITERATION_SLEEP"))
+K_BUCKET_SIZE = 20 if os.getenv("K_BUCKET_SIZE") is None else int(os.getenv("K_BUCKET_SIZE"))
+ALPHA = 3 if os.getenv("ALPHA") is None else int(os.getenv("ALPHA"))
+ID_BITS = 128 if os.getenv("ID_BITS") is None else int(os.getenv("ID_BITS"))
+ITERATION_SLEEP = 1 if os.getenv("ITERATION_SLEEP") is None else int(os.getenv("ITERATION_SLEEP"))
 
 
 class DHT:

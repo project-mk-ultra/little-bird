@@ -6,9 +6,7 @@ from dht.dht import DHT
 
 class DHTTest(unittest.TestCase):
     def setUp(self):
-        from dotenv import load_dotenv, find_dotenv
-        env_path = Path('..') / '.env.dist'
-        load_dotenv(dotenv_path=env_path)
+        pass
 
     def test_dht(self):
         """
