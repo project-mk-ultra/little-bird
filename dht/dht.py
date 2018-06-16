@@ -14,10 +14,10 @@ from dotenv import load_dotenv, find_dotenv
 
 load_dotenv(find_dotenv())
 
-K_BUCKET_SIZE = os.getenv("K_BUCKET_SIZE")
-ALPHA = os.getenv("ALPHA")
-id_bits = os.getenv("ID_BITS")
-iteration_sleep = os.getenv("ITERATION_SLEEP")
+K_BUCKET_SIZE = int(os.getenv("K_BUCKET_SIZE"))
+ALPHA = int(os.getenv("ALPHA"))
+ID_BITS = int(os.getenv("ID_BITS"))
+ITERATION_SLEEP = int(os.getenv("ITERATION_SLEEP"))
 
 
 class DHT:
@@ -30,6 +30,17 @@ class DHT:
                  info=None,
                  hash_function=Utils.hash_function,
                  requesthandler=DHTRequestHandler):
+        """
+        Initialises a new distributed hash table
+        :param host: hostname of this here table
+        :param port: listening port of the current table
+        :param id: id of the current table
+        :param seeds: seeds present in the table
+        :param storage: shelf to be used by the table
+        :param info:
+        :param hash_function: hash function used to compute the ids
+        :param requesthandler: handles requests from other nodes in the network
+        """
         if info is None:
             info = {}
         if storage is None:
@@ -43,7 +54,7 @@ class DHT:
         self.hash_function = hash_function
         self.peer = Peer(host, port, id, info)
         self.data = self.storage
-        self.buckets = BucketSet(K_BUCKET_SIZE, id_bits, self.peer.id)
+        self.buckets = BucketSet(K_BUCKET_SIZE, ID_BITS, self.peer.id)
         self.rpc_ids = {}  # should probably have a lock for this
         self.server = DHTServer(self.peer.address(), requesthandler)
         self.server.dht = self
@@ -53,23 +64,27 @@ class DHT:
         self.bootstrap(seeds)
 
     def identity(self):
+        """
+        Returns the nodeid on the network
+        :return: nodeid on the network
+        """
         return self.peer.id
 
     def iterative_find_nodes(self, key, boot_peer=None):
         shortlist = Shortlist(K_BUCKET_SIZE, key)
         shortlist.update(self.buckets.nearest_nodes(key, limit=ALPHA))
         if boot_peer:
-            rpc_id = random.getrandbits(id_bits)
+            rpc_id = random.getrandbits(ID_BITS)
             self.rpc_ids[rpc_id] = shortlist
             boot_peer.find_node(key, rpc_id, socket=self.server.socket, peer_id=self.peer.id, peer_info=self.peer.info)
         while (not shortlist.complete()) or boot_peer:
             nearest_nodes = shortlist.get_next_iteration(ALPHA)
             for peer in nearest_nodes:
                 shortlist.mark(peer)
-                rpc_id = random.getrandbits(id_bits)
+                rpc_id = random.getrandbits(ID_BITS)
                 self.rpc_ids[rpc_id] = shortlist
                 peer.find_node(key, rpc_id, socket=self.server.socket, peer_id=self.peer.id, peer_info=self.info)
-            time.sleep(iteration_sleep)
+            time.sleep(ITERATION_SLEEP)
             boot_peer = None
         return shortlist.results()
 
@@ -80,22 +95,28 @@ class DHT:
             nearest_nodes = shortlist.get_next_iteration(ALPHA)
             for peer in nearest_nodes:
                 shortlist.mark(peer)
-                rpc_id = random.getrandbits(id_bits)
+                rpc_id = random.getrandbits(ID_BITS)
                 self.rpc_ids[rpc_id] = shortlist
                 peer.find_value(key,
                                 rpc_id,
                                 socket=self.server.socket,
                                 peer_id=self.peer.id,
                                 peer_info=self.info)
-            time.sleep(iteration_sleep)
+            time.sleep(ITERATION_SLEEP)
         return shortlist.completion_result()
 
     # Return the list of connected peers
     def peers(self):
         return self.buckets.to_dict()
 
-    # Boostrap the network with a list of bootstrap nodes
-    def bootstrap(self, bootstrap_nodes=[]):
+    def bootstrap(self, bootstrap_nodes=None):
+        """
+        Bootstrap the network with a list of bootstrap nodes
+        :param bootstrap_nodes: A list of nodes to bootstrap the network with
+        :return: None
+        """
+        if bootstrap_nodes is None:
+            bootstrap_nodes = []
         for bnode in bootstrap_nodes:
             boot_peer = Peer(bnode[0], bnode[1], "", "")
             self.iterative_find_nodes(self.peer.id, boot_peer=boot_peer)
@@ -104,8 +125,13 @@ class DHT:
             for bnode in self.buckets.to_list():
                 self.iterative_find_nodes(self.peer.id, boot_peer=Peer(bnode[0], bnode[1], bnode[2], bnode[3]))
 
-    # Get a value in a sync way, calling an handler
     def get_sync(self, key, handler):
+        """
+        Get a value in a sync way, calling an handler
+        :param key: Key we are searching for
+        :param handler: Handler to pass value to after getting the key
+        :return:
+        """
         try:
             d = self[key]
         except:
@@ -113,8 +139,13 @@ class DHT:
 
         handler(d)
 
-    # Get a value in async way
     def get(self, key, handler):
+        """
+        Get a value in async way
+        :param key: Key we are searching for
+        :param handler:
+        :return: Handler to pass value to after getting the key
+        """
         # print ('dht.get',key)
         t = threading.Thread(target=self.get_sync, args=(key, handler))
         t.start()
