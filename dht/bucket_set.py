@@ -6,24 +6,35 @@ from dht.utils import Utils
 
 
 class BucketSet:
-    def __init__(self, bucket_size, buckets, id):
+    def __init__(self, k, id_bits, id):
         """
-
-        :param bucket_size:
-        :param buckets:
-        :param id:
+        Initialises a set of k-buckets. Kademlia stores a list up to k in size for each of the node ids bits.
+        A 128 bit id has 128 such lists. Each list contains triple information (ip_address, udp_port, node-id)
+        :param k: The bucket size is a constant ,k, which caps the size of the lists within a k bucket
+        , normally k=20.
+        :param id_bits: Bits in the nodeid.
+        :param id: The peer id
         """
-        self.id = id
-        self.bucket_size = bucket_size
-        self.buckets = [list() for _ in range(buckets)]
+        self.id = id  # the unique nodes id
+        self.bucket_size = k  # lists are >= k
+        self.buckets = [list() for _ in range(id_bits)]  # create lists as large as the bits of the nodeid
         self.lock = threading.Lock()
 
     def to_list(self):
+        """
+        Converts k-buckets to list object. Returns this list object
+        :return: A list representation of the buckets
+        """
         l = []
-        for bucket in self.buckets: l += bucket
+        for bucket in self.buckets:
+            l += bucket
         return l
 
     def to_dict(self):
+        """
+        Converts k-buckets to list object. Returns this list object
+        :return: Returns a dict representation
+        """
         l = []
         for bucket in self.buckets:
             for peer in bucket:
@@ -32,6 +43,11 @@ class BucketSet:
         return l
 
     def insert(self, peer):
+        """
+        Adds a peer into a k-bucket
+        :param peer: A participant within the network.
+        :return: None
+        """
         if peer.id != self.id:
             bucket_number = Utils.largest_differing_bit(self.id, peer.id)
             peer_triple = peer.astriple()
