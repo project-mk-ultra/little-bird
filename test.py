@@ -1,5 +1,7 @@
 import socket
 
+from dht import utils
+
 host = '192.168.1.112'
 port = 9789
 
@@ -12,3 +14,6 @@ try:
     print("connected")
 except Exception as e:
     print(e)
+
+
+print(utils.Utils.check_host_up(host, port))
