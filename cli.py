@@ -72,11 +72,12 @@ while True:
         if len(command) != 3:
             print("Incorrect usage: /push <key> <value>")
         else:
-            print("/push {0}".format(command[1]))
-            dht1["test"] = command[1]
+            print("/push {0} {1}".format(command[1], command[2]))
+            dht1[command[1]] = command[2]
     elif command[0] == "/pull":
         if len(command) == 2:
             print("/pull {0}".format(command[1]))
+            print(dht1[command[1]])
             print("Pulled: {0}={1}".format(command[1], dht1[command[1]]))
         else:
             print("Incorrect usage: /pull <key>")
