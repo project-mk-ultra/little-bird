@@ -12,3 +12,11 @@ venv/
 .env
 
 .netrc
+
+# Packaging
+
+*.egg-info
+
+build/
+
+dist/

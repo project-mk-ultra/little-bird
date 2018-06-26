@@ -4,10 +4,10 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="torrent-tracker-scraper",
-    version="0.0.1",
+    name="little-bird",
+    version="0.0.2",
     author="ziggs",
-    packages=['little_bird'],
+    packages=['dht'],
     author_email="ziggs@airmail.cc",
     description="A Python3 Kademlia overlay network implementation. ",
     long_description=long_description,
@@ -20,7 +20,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ),
     install_requires=[
-        'pygogo',
         'python-dotenv',
         'logbook',
         'netifaces'
