@@ -51,7 +51,7 @@ class Utils:
         sock.settimeout(1)
         result = sock.connect_ex((host, port))
         if result == 0:
-            return False
-        else:
             return True
+        else:
+            return False
 
