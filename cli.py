@@ -22,7 +22,7 @@ ip, ip_format = utils.Utils.get_local_ip()
 print("Your IP: {0} Range: {1}".format(ip, ip_format))
 
 if not args.bootstrap:
-    print("No bootstrap specified, scanning")
+    print("No bootstrap node specified, scanning")
     possible_hosts = []
 
     for host in IPv4Network(ip_format):
