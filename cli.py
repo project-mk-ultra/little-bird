@@ -21,7 +21,7 @@ ip, ip_format = utils.Utils.get_local_ip()
 
 print("Your IP: {0} LAN format: {1}".format(ip, ip_format))
 
-if args.bootstrap:
+if not args.bootstrap:
     print("No bootstrap specified, scanning")
     possible_hosts = []
 
