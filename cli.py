@@ -59,7 +59,7 @@ else:
     if len(bootstrap) == 2:
         print("bootstrapping with {0}:{1}".format(bootstrap[0], bootstrap[1]))
         host1, port1 = ip, PORT
-        dht1 = DHT(host1, port1, seeds=[(bootstrap[0], bootstrap[1])])
+        dht1 = DHT(host1, port1, seeds=[(bootstrap[0], int(bootstrap[1]))])
     else:
         exit("Invalid boostrap node format. Use <host>:<port>")
 
