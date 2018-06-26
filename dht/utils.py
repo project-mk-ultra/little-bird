@@ -1,5 +1,7 @@
 import hashlib
+import netifaces
 import random
+import socket
 
 id_bits = 128
 
@@ -26,4 +28,28 @@ class Utils:
         if seed:
             random.seed(seed)
         return random.randint(0, (2 ** id_bits) - 1)
+
+    @staticmethod
+    def get_local_ip():
+        interfaces = netifaces.interfaces()
+
+        for interface in interfaces:
+            addrs = netifaces.ifaddresses(interface)
+            try:
+                ip = addrs[netifaces.AF_INET][0]['addr']
+                octets = ip.split(".")
+                if octets[0] == '192':
+                    ip_format = "{0}.{1}.{2}.0/24".format(octets[0], octets[1], octets[2])
+                    return ip, ip_format
+            except KeyError as e:
+                print("No 192.168.0.0/24 or 192.168.1.0/24 address found for interface {0}".format(interface))
+        exit("Could not find a valid 192.168.0.0/24 or 192.168.1.0/24 interface")
+
+    @staticmethod
+    def check_host_up(host, port):
+        try:
+            sock = socket.create_connection((host, port), timeout=1)
+            return True
+        except:
+            return False
 

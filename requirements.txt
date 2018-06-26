@@ -2,3 +2,4 @@ matplotlib
 networkx
 logbook
 python-dotenv
+netifaces
