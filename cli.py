@@ -61,7 +61,7 @@ else:
         host1, port1 = ip, PORT
         dht1 = DHT(host1, port1, seeds=[(bootstrap[0], bootstrap[1])])
     else:
-        exit("Invalid boostrap node format. Use <host>:<port>")
+        exit("Invalid bootstrap node format. Use <host>:<port>")
 
 while True:
     command = input("Enter a command")
@@ -77,8 +77,11 @@ while True:
     elif command[0] == "/pull":
         if len(command) == 2:
             print("/pull {0}".format(command[1]))
-            print(dht1[command[1]])
-            print("Pulled: {0}={1}".format(command[1], dht1[command[1]]))
+            try:
+                print(dht1[command[1]])
+                print("Pulled: {0}={1}".format(command[1], dht1[command[1]]))
+            except KeyError:
+                print("Key {0} not found.".format(command[1]))
         else:
             print("Incorrect usage: /pull <key>")
     else:
