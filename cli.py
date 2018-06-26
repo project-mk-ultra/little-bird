@@ -1,3 +1,4 @@
+import socket
 import time
 import argparse
 from ipaddress import IPv4Network
@@ -63,10 +64,17 @@ else:
     else:
         exit("Invalid bootstrap node format. Use <host>:<port>")
 
+# launch tcp server, so bootstrapper can find us
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((ip, PORT))
+server.listen(5)  # max backlog of connections
+
 while True:
     command = input("Enter a command")
     command = command.split(" ")
     if command[0] == "/exit":
+        server.close()
         exit()
     elif command[0] == "/push":
         if len(command) != 3:
@@ -86,4 +94,3 @@ while True:
             print("Incorrect usage: /pull <key>")
     else:
         print("Invalid command. Consult the documentation: <https://github.com/ZigmundVonZaun/little-bird>")
-
