@@ -19,7 +19,7 @@ print("Welcome to the little-bird demo")
 # get details about the local network
 ip, ip_format = utils.Utils.get_local_ip()
 
-print("Your IP: {0} LAN format: {1}".format(ip, ip_format))
+print("Your IP: {0} Range: {1}".format(ip, ip_format))
 
 if not args.bootstrap:
     print("No bootstrap specified, scanning")
