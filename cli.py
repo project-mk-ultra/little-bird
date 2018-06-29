@@ -45,7 +45,7 @@ if not args.bootstrap:
     if len(hits) == 0:
         exit("No bootstrap nodes found, start an instance node as a mother or specify a bootstrap node")
     else:
-        print(hits)
+        print("hits found:", hits)
         host1, port1 = ip, PORT
         seeds = []
         for hit in hits:
