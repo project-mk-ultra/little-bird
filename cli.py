@@ -122,7 +122,7 @@ time.sleep(3)
 update_peer_list()
 
 while True:
-    command = input("Enter a command")
+    command = input("Enter a command:")
     command = command.split(" ")
     if command[0] == "/exit":
         peer_list = dht1["peer_list"]
