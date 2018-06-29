@@ -100,6 +100,7 @@ while True:
     command = command.split(" ")
     if command[0] == "/exit":
         server.close()
+        dht1["peer_list"].remove("{0}:{1}".format(ip, PORT))
         exit()
     elif command[0] == "/push":
         if len(command) != 3:
