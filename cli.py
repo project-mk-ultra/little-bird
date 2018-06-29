@@ -78,6 +78,7 @@ else:
 # launch tcp server, so bootstrapper can find us
 try:
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setblocking(1)
     server.bind((ip, PORT))
     server.listen(5)  # max backlog of connections
 except:
