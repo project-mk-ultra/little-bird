@@ -1,4 +1,5 @@
 import socket
+import threading
 import time
 import argparse
 from ipaddress import IPv4Network
@@ -42,7 +43,7 @@ if not args.bootstrap:
     print("Done!")
 
     if len(hits) == 0:
-        exit("No bootstrap nodes found")
+        exit("No bootstrap nodes found, start an instance node as a mother or specify a bootstrap node")
     else:
         print(hits)
         host1, port1 = ip, PORT
@@ -54,6 +55,7 @@ elif args.bootstrap == "mother":
     print("Starting current instance as mother node")
     host1, port1 = ip, PORT
     dht1 = DHT(host1, port1)  # mother node
+    dht1["peer_list"] = ["{0}:{1}".format(host1, port1)]
 else:
     bootstrap = args.bootstrap
     bootstrap = bootstrap.split(":")
@@ -61,14 +63,37 @@ else:
         print("bootstrapping with {0}:{1}".format(bootstrap[0], bootstrap[1]))
         host1, port1 = ip, PORT
         dht1 = DHT(host1, port1, seeds=[(bootstrap[0], int(bootstrap[1]))])
+        dht1["peer_list"] = dht1["peerlist"].append("{0}:{1}".format(host1, port1))
     else:
         exit("Invalid bootstrap node format. Use <host>:<port>")
 
 # launch tcp server, so bootstrapper can find us
+try:
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((ip, PORT))
+    server.listen(5)  # max backlog of connections
+except:
+    exit("Could not bind bootstrap listening server")
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((ip, PORT))
-server.listen(5)  # max backlog of connections
+
+def update_peer_list():
+    """
+    Updates peer list by pinging peers every 15 seconds. If no response is received, the peer is pruned from the
+    peer list
+    :return: None
+    """
+    timer = threading.Timer(15.0, update_peer_list)
+    timer.daemon = True
+    timer.start()
+    for i, peer in enumerate(dht1["peer_list"]):
+        host, port = peer.split(":")
+        if not utils.Utils.check_host_up(host, int(port)):
+            dht1["peer_list"].pop(i)
+
+
+# call peer list updater
+
+update_peer_list()
 
 while True:
     command = input("Enter a command")
@@ -92,5 +117,8 @@ while True:
                 print("Key {0} not found.".format(command[1]))
         else:
             print("Incorrect usage: /pull <key>")
+    elif command[0] == "/peers":
+        for i, peer in enumerate(dht1["peer_list"]):
+            print("{0}: {1}".format(i, peer))
     else:
         print("Invalid command. Consult the documentation: <https://github.com/ZigmundVonZaun/little-bird>")
