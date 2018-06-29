@@ -1,5 +1,7 @@
 import argparse
+import os
 import subprocess
+import psutil
 import threading
 import time
 from ipaddress import IPv4Network
@@ -104,15 +106,21 @@ def update_peer_list():
     peer list
     :return: None
     """
+    octets = ip.split(".")
+    router = "{0}.{1}.{2}.1".format(octets[0], octets[1], octets[2])
+    if utils.Utils.check_host_up(router, 80):
+        for i, peer in enumerate(dht1["peer_list"]):
+            host, port = peer.split(":")
+            peer_list = dht1["peer_list"]
+            if not utils.Utils.check_host_up(host, int(port)):
+                peer_list.pop(i)
+            dht1["peer_list"] = peer_list
+    else:
+        print("\nrouter down! you are not connected to the Internet")
+        os._exit(1)
     timer = threading.Timer(15.0, update_peer_list)
     timer.daemon = True
     timer.start()
-    for i, peer in enumerate(dht1["peer_list"]):
-        host, port = peer.split(":")
-        peer_list = dht1["peer_list"]
-        if not utils.Utils.check_host_up(host, int(port)):
-            peer_list.pop(i)
-        dht1["peer_list"] = peer_list
 
 
 # call peer list updater
@@ -121,6 +129,20 @@ time.sleep(3)
 
 update_peer_list()
 
+
+def cleanup():
+    """
+    Cleans up after shutdown, kills netcat processes
+    :return: Nothing
+    """
+    PROCNAME = "netcat"
+
+    for proc in psutil.process_iter():
+        # check whether the process name matches
+        if proc.name() == PROCNAME:
+            print("Killed [{1}]{0}".format(PROCNAME, proc.pid))
+            proc.kill()
+
 while True:
     command = input("Enter a command:")
     command = command.split(" ")
@@ -128,7 +150,8 @@ while True:
         peer_list = dht1["peer_list"]
         peer_list.remove("{0}:{1}".format(ip, PORT))
         dht1["peer_list"] = peer_list
-        exit()
+        cleanup()
+        exit("Shutdown was successful")
     elif command[0] == "/push":
         if len(command) != 3:
             print("Incorrect usage: /push <key> <value>")

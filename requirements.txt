@@ -3,3 +3,4 @@ networkx
 logbook
 python-dotenv
 netifaces
+psutil
