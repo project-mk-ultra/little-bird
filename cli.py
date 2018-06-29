@@ -65,10 +65,13 @@ else:
             exit("there is no bootstrap instance listening on {0}:{1}".format(bootstrap[0], bootstrap[1]))
         host1, port1 = ip, PORT
         dht1 = DHT(host1, port1, seeds=[(bootstrap[0], int(bootstrap[1]))])
-        peer_list = dht1["peer_list"]
-        peer_list.append("{0}:{1}".format(host1, port1))
-        dht1["peer_list"] = peer_list
-        print(dht1["peer_list"])
+        try:
+            peer_list = dht1["peer_list"]
+            if "{0}:{1}".format(host1, port1) not in peer_list:
+                peer_list.append("{0}:{1}".format(host1, port1))
+            dht1["peer_list"] = peer_list
+        except:
+            exit("Something went wrong during bootstrapping, please kindly try again")
     else:
         exit("Invalid bootstrap node format. Use <host>:<port>")
 
