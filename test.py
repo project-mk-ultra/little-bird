@@ -2,7 +2,7 @@ import socket
 
 from dht import utils
 
-host = '192.168.0.199'
+host = '192.168.0.66'
 port = 9789
 
 

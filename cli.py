@@ -1,8 +1,9 @@
-import socket
+import argparse
+import subprocess
 import threading
 import time
-import argparse
 from ipaddress import IPv4Network
+
 from dht import utils
 from dht.dht import DHT
 
@@ -75,13 +76,18 @@ else:
     else:
         exit("Invalid bootstrap node format. Use <host>:<port>")
 
+
 # launch tcp server, so bootstrapper can find us
+def simple_server():
+    subprocess.Popen("/usr/bin/netcat -l {0} -p {1} -k".format(ip, PORT), close_fds=True, shell=True)
+
+
 try:
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setblocking(1)
-    server.bind((ip, PORT))
-    server.listen(5)  # max backlog of connections
-except:
+    server_thread = threading.Thread(target=simple_server())
+    server_thread.daemon = True
+    server_thread.start()
+except Exception as e:
+    print(e)
     exit("Could not bind bootstrap listening server")
 
 
@@ -104,13 +110,14 @@ def update_peer_list():
 
 # call peer list updater
 
+time.sleep(3)
+
 update_peer_list()
 
 while True:
     command = input("Enter a command")
     command = command.split(" ")
     if command[0] == "/exit":
-        server.close()
         peer_list = dht1["peer_list"]
         peer_list.remove("{0}:{1}".format(ip, PORT))
         dht1["peer_list"] = peer_list
