@@ -93,10 +93,12 @@ def update_peer_list():
     timer = threading.Timer(15.0, update_peer_list)
     timer.daemon = True
     timer.start()
-    # for i, peer in enumerate(dht1["peer_list"]):
-    #     host, port = peer.split(":")
-    #     if not utils.Utils.check_host_up(host, int(port)):
-    #         dht1["peer_list"].pop(i)
+    for i, peer in enumerate(dht1["peer_list"]):
+        host, port = peer.split(":")
+        peer_list = dht1["peer_list"]
+        if not utils.Utils.check_host_up(host, int(port)):
+            peer_list.pop(i)
+        dht1["peer_list"] = peer_list
 
 
 # call peer list updater
