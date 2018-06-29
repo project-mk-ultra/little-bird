@@ -61,9 +61,14 @@ else:
     bootstrap = bootstrap.split(":")
     if len(bootstrap) == 2:
         print("bootstrapping with {0}:{1}".format(bootstrap[0], bootstrap[1]))
+        if not utils.Utils.check_host_up(bootstrap[0], int(bootstrap[1])):
+            exit("there is no bootstrap instance listening on {0}:{1}".format(bootstrap[0], bootstrap[1]))
         host1, port1 = ip, PORT
         dht1 = DHT(host1, port1, seeds=[(bootstrap[0], int(bootstrap[1]))])
-        dht1["peer_list"] = dht1["peerlist"].append("{0}:{1}".format(host1, port1))
+        peer_list = dht1["peer_list"]
+        peer_list.append("{0}:{1}".format(host1, port1))
+        dht1["peer_list"] = peer_list
+        print(dht1["peer_list"])
     else:
         exit("Invalid bootstrap node format. Use <host>:<port>")
 
@@ -85,10 +90,10 @@ def update_peer_list():
     timer = threading.Timer(15.0, update_peer_list)
     timer.daemon = True
     timer.start()
-    for i, peer in enumerate(dht1["peer_list"]):
-        host, port = peer.split(":")
-        if not utils.Utils.check_host_up(host, int(port)):
-            dht1["peer_list"].pop(i)
+    # for i, peer in enumerate(dht1["peer_list"]):
+    #     host, port = peer.split(":")
+    #     if not utils.Utils.check_host_up(host, int(port)):
+    #         dht1["peer_list"].pop(i)
 
 
 # call peer list updater
@@ -100,7 +105,9 @@ while True:
     command = command.split(" ")
     if command[0] == "/exit":
         server.close()
-        dht1["peer_list"].remove("{0}:{1}".format(ip, PORT))
+        peer_list = dht1["peer_list"]
+        peer_list.remove("{0}:{1}".format(ip, PORT))
+        dht1["peer_list"] = peer_list
         exit()
     elif command[0] == "/push":
         if len(command) != 3:
