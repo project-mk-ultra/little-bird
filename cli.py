@@ -52,6 +52,13 @@ if not args.bootstrap:
         for hit in hits:
             seeds.append((hit, PORT))
         dht1 = DHT(host1, port1, seeds=seeds)
+        try:
+            peer_list = dht1["peer_list"]
+            if "{0}:{1}".format(host1, port1) not in peer_list:
+                peer_list.append("{0}:{1}".format(host1, port1))
+            dht1["peer_list"] = peer_list
+        except:
+            exit("Something went wrong during bootstrapping, please kindly try again")
 elif args.bootstrap == "mother":
     print("Starting current instance as mother node")
     host1, port1 = ip, PORT
@@ -79,7 +86,7 @@ else:
 
 # launch tcp server, so bootstrapper can find us
 def simple_server():
-    subprocess.Popen("/usr/bin/netcat -l {0} -p {1} -k".format(ip, PORT), close_fds=True, shell=True)
+    subprocess.Popen("netcat -l {0} -p {1} -k".format(ip, PORT), close_fds=True, shell=True)
 
 
 try:
