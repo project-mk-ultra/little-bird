@@ -1,6 +1,8 @@
 import argparse
 import os
 import subprocess
+import sys
+
 import psutil
 import threading
 import time
@@ -145,32 +147,45 @@ def cleanup():
             proc.kill()
 
 while True:
-    command = input("Enter a command:")
-    command = command.split(" ")
-    if command[0] == "/exit":
-        peer_list = dht1["peer_list"]
-        peer_list.remove("{0}:{1}".format(ip, PORT))
-        dht1["peer_list"] = peer_list
+    try:
+        command = input("Enter a command:")
+        command = command.split(" ")
+        if command[0] == "/exit":
+            peer_list = dht1["peer_list"]
+            if "{0}:{1}".format(ip, PORT) in peer_list:
+                peer_list.remove("{0}:{1}".format(ip, PORT))
+                dht1["peer_list"] = peer_list
+            cleanup()
+            exit("Shutdown was successful")
+        elif command[0] == "/push":
+            if len(command) != 3:
+                print("Incorrect usage: /push <key> <value>")
+            else:
+                print("/push {0} {1}".format(command[1], command[2]))
+                dht1[command[1]] = command[2]
+        elif command[0] == "/pull":
+            if len(command) == 2:
+                print("/pull {0}".format(command[1]))
+                try:
+                    print(dht1[command[1]])
+                    print("Pulled: {0}={1}".format(command[1], dht1[command[1]]))
+                except KeyError:
+                    print("Key {0} not found.".format(command[1]))
+            else:
+                print("Incorrect usage: /pull <key>")
+        elif command[0] == "/peers":
+            for i, peer in enumerate(dht1["peer_list"]):
+                print("{0}: {1}".format(i, peer))
+        else:
+            print("Invalid command. Consult the documentation: <https://github.com/ZigmundVonZaun/little-bird>")
+    except (KeyboardInterrupt, SystemExit):
+        print("shutting down gracefully")
         cleanup()
-        exit("Shutdown was successful")
-    elif command[0] == "/push":
-        if len(command) != 3:
-            print("Incorrect usage: /push <key> <value>")
-        else:
-            print("/push {0} {1}".format(command[1], command[2]))
-            dht1[command[1]] = command[2]
-    elif command[0] == "/pull":
-        if len(command) == 2:
-            print("/pull {0}".format(command[1]))
-            try:
-                print(dht1[command[1]])
-                print("Pulled: {0}={1}".format(command[1], dht1[command[1]]))
-            except KeyError:
-                print("Key {0} not found.".format(command[1]))
-        else:
-            print("Incorrect usage: /pull <key>")
-    elif command[0] == "/peers":
-        for i, peer in enumerate(dht1["peer_list"]):
-            print("{0}: {1}".format(i, peer))
-    else:
-        print("Invalid command. Consult the documentation: <https://github.com/ZigmundVonZaun/little-bird>")
+        peer_list = dht1["peer_list"]
+        if "{0}:{1}".format(ip, PORT) in peer_list:
+            peer_list.remove("{0}:{1}".format(ip, PORT))
+            dht1["peer_list"] = peer_list
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
