@@ -141,7 +141,7 @@ def cleanup():
     for proc in psutil.process_iter():
         # check whether the process name matches
         if proc.name() == PROCNAME:
-            print("Killing [{1}]{0}".format(PROCNAME, proc.pid))
+            print("\nKilling [{1}]{0}".format(PROCNAME, proc.pid))
             proc.kill()
 
 while True:
