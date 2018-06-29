@@ -116,6 +116,7 @@ def update_peer_list():
                 peer_list.pop(i)
             dht1["peer_list"] = peer_list
     else:
+        cleanup()
         print("\nrouter down! you are not connected to the Internet")
         os._exit(1)
     timer = threading.Timer(15.0, update_peer_list)
@@ -140,7 +141,7 @@ def cleanup():
     for proc in psutil.process_iter():
         # check whether the process name matches
         if proc.name() == PROCNAME:
-            print("Killed [{1}]{0}".format(PROCNAME, proc.pid))
+            print("Killing [{1}]{0}".format(PROCNAME, proc.pid))
             proc.kill()
 
 while True:
